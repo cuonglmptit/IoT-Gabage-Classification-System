@@ -37,7 +37,7 @@ classes = ['Box_cardboard_paper',  'glass_metal_plastic', 'organic','other']
 #   /cam-hi.jpg
 #   /cam-mid.jpg
 
-url='http://192.168.137.101/cam-lo.jpg'
+url='http://192.168.137.179/cam-lo.jpg'
 def save_img(filename,img):
   cv2.imwrite(filename,img)
 # cam=cv2.VideoCapture(0)
@@ -69,15 +69,26 @@ while True:
       print(prediction)
       print(f"label {s}")
       key = cv2.waitKey(10) & 0xFF
-      if (pro>0.7):
+      if(prediction[2]>0.002): 
+           print("ok nay", prediction[2])
+           predicted_class = 2
+           s="Label: {}".format(str(classes[2]))
+           s2="Pro: {}".format(str(pro))
+           cv2.rectangle(frame, (x,y), (w,h), (255,0,0), 2)
+           cv2.putText(frame, s , (x+5, y+15),cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0,255,0), 2)
+           cv2.putText(frame, s2, (x+35, y+45),cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0,255,0), 2)
+           print(f"predict class: {predicted_class}")
+          #  if key == ord('u'):
+           camera_run(3,img2,int(predicted_class))
+      elif (pro>0.8):
         #.....
         cv2.rectangle(frame, (x,y), (w,h), (255,0,0), 2)
         cv2.putText(frame, s , (x+5, y+15),cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0,255,0), 2)
         cv2.putText(frame, s2, (x+35, y+45),cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0,255,0), 2)
         print(f"predict class: {predicted_class}")
-        print(f"img2: {img2}")
-        if key == ord('u'):
-            camera_run(1,img2,int(predicted_class))
+        # print(f"img2: {img2}")
+        # if key == ord('u'):
+        camera_run(3,img2,int(predicted_class))
       # camera_run(1,img2,1)
 
       # time.sleep(0.5)  

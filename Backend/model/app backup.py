@@ -24,7 +24,7 @@ def home():
         cur=mysql.get_db().cursor()
         cur.execute("select Id_thungrac,ViTriThungRac from thungrac")
         listvitri=cur.fetchall()
-        cur.execute("select khoangrac.ID_khoangrac, thungrac.ID_Thungrac, TenNhan, ViTriThungRac ,KhoiLuong,SoLanDo from ractrongkhoang,khoangrac, thungrac where thungrac.ID_thungrac=khoangrac.ID_Thungrac and khoangrac.ID_khoangrac=ractrongkhoang.ID_khoangrac and thungrac.ID_thungrac=ractrongkhoang.id_thungrac and NgayRacVao>NgayDoRac order by thungrac.ID_Thungrac")
+        cur.execute("select khoangrac.ID_khoangrac, thungrac.ID_Thungrac, TenNhan, ViTriThungRac ,KhoiLuong,SoLanDo from ractrongkhoang,khoangrac, thungrac where thungrac.ID_thungrac=khoangrac.ID_Thungrac and khoangrac.ID_khoangrac=ractrongkhoang.ID_khoangrac and NgayRacVao>NgayDoRac order by thungrac.ID_Thungrac")
         khoangrac=cur.fetchall()
         print(f"khoangrac: {khoangrac}")
         if khoangrac is not None:
@@ -69,8 +69,7 @@ def home():
         end_time=request.form['end_time']
         cur=mysql.get_db().cursor()
         if start_time and end_time and start_time<end_time:
-            print('location la day ', location)
-            cur.execute(f"select NgayRacVao, KhoiLuong, TenNhan, ViTriThungRac, AnhRac from ractrongkhoang ,khoangrac, thungrac where thungrac.ID_thungrac='{location}' and thungrac.ID_Thungrac=khoangrac.ID_Thungrac and khoangrac.ID_khoangrac=ractrongkhoang.ID_khoangrac and thungrac.ID_thungrac=ractrongkhoang.id_thungrac and NgayRacVao>='{start_time}' and NgayRacVao<='{end_time}' order by ractrongkhoang.NgayRacVao")
+            cur.execute(f"select NgayRacVao, KhoiLuong, TenNhan, ViTriThungRac, AnhRac from ractrongkhoang ,khoangrac, thungrac where thungrac.ID_thungrac='{location}' and thungrac.ID_Thungrac=khoangrac.ID_Thungrac and khoangrac.ID_khoangrac=ractrongkhoang.ID_khoangrac and NgayRacVao>='{start_time}' and NgayRacVao<='{end_time}' order by ractrongkhoang.NgayRacVao")
             db=cur.fetchall()
             if db is not None:
                 dir_time=[]
@@ -182,7 +181,7 @@ def push_data():
             print(f"id_khoangrac {id_khoangrac}")
             print(f"url_save {url_save_to_db}")
             print(f"NgayRacVao {NgayRacVao}")
-            cur.execute(f"INSERT INTO ractrongkhoang (ID_khoangrac,AnhRac,NgayRacVao, KhoiLuong, id_thungrac) VALUES ('{id_khoangrac}','{url_save_to_db}','{NgayRacVao}', '10','{id_Thungrac}');")
+            cur.execute(f"INSERT INTO ractrongkhoang (ID_khoangrac,AnhRac,NgayRacVao, KhoiLuong) VALUES ('{id_khoangrac}','{url_save_to_db}','{NgayRacVao}', '10');")
             mysql.get_db().commit()
             return jsonify({"ID_thungrac":id_Thungrac,'ID_khoangrac':id_khoangrac,"AnhRac":AnhRac,"NgayRacVao":NgayRacVao,"TenNhan":TenNhan})
         except Exception as e:
@@ -197,7 +196,7 @@ def get_img():
         location=request.form['location']
         cur=mysql.get_db().cursor()
         if start_time and end_time and start_time<=end_time:
-            cur.execute(f"SELECT khoangrac.ID_khoangrac,AnhRac,TenNhan FROM iot.ractrongkhoang, khoangrac,thungrac where thungrac.ID_Thungrac='{location}' and  thungrac.ID_thungrac=khoangrac.ID_Thungrac and khoangrac.ID_khoangrac=ractrongkhoang.ID_khoangrac and thungrac.ID_thungrac=ractrongkhoang.id_thungrac and NgayRacVao>=NgayDoRac and NgayRacVao>='{start_time}' and NgayRacVao<='{end_time}' order by khoangrac.ID_khoangrac")
+            cur.execute(f"SELECT khoangrac.ID_khoangrac,AnhRac,TenNhan FROM iot.ractrongkhoang, khoangrac,thungrac where thungrac.ID_Thungrac='{location}' and  thungrac.ID_thungrac=khoangrac.ID_Thungrac and khoangrac.ID_khoangrac=ractrongkhoang.ID_khoangrac and NgayRacVao>=NgayDoRac and NgayRacVao>='{start_time}' and NgayRacVao<='{end_time}' order by khoangrac.ID_khoangrac")
             img=cur.fetchall()
             print(f"img: {img}")
             if img is not None:
